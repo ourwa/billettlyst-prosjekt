@@ -1,0 +1,32 @@
+.category-page {
+    padding: 2rem;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filters input {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .card {
+    background: #f4f4f4;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  

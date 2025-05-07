@@ -1,0 +1,42 @@
+.event-page {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .event-page h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .event-page img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .event-page ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  
+  .event-page li {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .ticket-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #222;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .ticket-link:hover {
+    background-color: #444;
+  }
+  
