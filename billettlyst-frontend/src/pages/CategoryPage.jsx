@@ -16,24 +16,34 @@ function CategoryPage() {
   const [filterCountry, setFilterCountry] = useState('')
 
   useEffect(() => {
-    async function fetchData(type, setState) {
-      const url = `${proxy}${encodeURIComponent(
-        `https://app.ticketmaster.com/discovery/v2/suggest?apikey=${API_KEY}&keyword=${slug}&size=5`
-      )}`
-
+    async function fetchData() {
+      const url = (keyword) =>
+        `${proxy}${encodeURIComponent(
+          `https://app.ticketmaster.com/discovery/v2/suggest?apikey=${API_KEY}&keyword=${keyword}&size=5`
+        )}`
+  
       try {
-        const res = await fetch(url)
-        const data = await res.json()
-        setState(data._embedded?.attractions || [])
+        const [arr, attr, venue] = await Promise.all([
+          fetch(url(slug)).then((res) => res.json()),
+          fetch(url('attraction')).then((res) => res.json()),
+          fetch(url('venue')).then((res) => res.json()),
+        ])
+  
+        console.log("Arrangementer", arr)
+        console.log("Attraksjoner", attr)
+        console.log("Spillesteder", venue)
+  
+        setArrangementer(arr._embedded?.attractions || [])
+        setAttraksjoner(attr._embedded?.attractions || [])
+        setSpillesteder(venue._embedded?.attractions || [])
       } catch (error) {
         console.error('Feil ved henting:', error)
       }
     }
-
-    fetchData(slug, setArrangementer)
-    fetchData('attraction', setAttraksjoner)
-    fetchData('venue', setSpillesteder)
+  
+    fetchData()
   }, [slug])
+  
 
   const toggleWishlist = (itemId) => {
     setWishlist((prev) =>
@@ -42,6 +52,21 @@ function CategoryPage() {
   }
 
   const isInWishlist = (itemId) => wishlist.includes(itemId)
+
+  const renderCards = (items) =>
+    items
+      .filter((item) => item.name?.toLowerCase().includes(search.toLowerCase()))
+      .map((item) => (
+        <div className="card" key={item.id}>
+          {item.images?.[0]?.url && (
+            <img src={item.images[0].url} alt={item.name} />
+          )}
+          <p>{item.name}</p>
+          <button onClick={() => toggleWishlist(item.id)}>
+            {isInWishlist(item.id) ? '❤️' : '🤍'}
+          </button>
+        </div>
+      ))
 
   return (
     <div className="category-page">
@@ -70,46 +95,17 @@ function CategoryPage() {
 
       <section>
         <h2>Arrangementer</h2>
-        <div className="card-list">
-          {arrangementer
-            .filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
-            .map((a) => (
-              <div className="card" key={a.id}>
-                <p>{a.name}</p>
-                <button onClick={() => toggleWishlist(a.id)}>
-                  {isInWishlist(a.id) ? '❤️' : '🤍'}
-                </button>
-              </div>
-            ))}
-        </div>
+        <div className="card-list">{renderCards(arrangementer)}</div>
       </section>
 
       <section>
         <h2>Attraksjoner</h2>
-        <div className="card-list">
-          {attraksjoner.map((a) => (
-            <div className="card" key={a.id}>
-              <p>{a.name}</p>
-              <button onClick={() => toggleWishlist(a.id)}>
-                {isInWishlist(a.id) ? '❤️' : '🤍'}
-              </button>
-            </div>
-          ))}
-        </div>
+        <div className="card-list">{renderCards(attraksjoner)}</div>
       </section>
 
       <section>
         <h2>Spillesteder</h2>
-        <div className="card-list">
-          {spillesteder.map((v) => (
-            <div className="card" key={v.id}>
-              <p>{v.name}</p>
-              <button onClick={() => toggleWishlist(v.id)}>
-                {isInWishlist(v.id) ? '❤️' : '🤍'}
-              </button>
-            </div>
-          ))}
-        </div>
+        <div className="card-list">{renderCards(spillesteder)}</div>
       </section>
     </div>
   )

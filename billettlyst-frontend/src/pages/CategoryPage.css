@@ -6,11 +6,13 @@
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
   }
   
   .filters input {
     padding: 0.5rem;
     font-size: 1rem;
+    flex: 1 1 150px;
   }
   
   .card-list {
@@ -25,8 +27,26 @@
     padding: 1rem;
     border-radius: 8px;
     width: 200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  
+  .card p {
+    margin: 0.5rem 0;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .card button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
   }
   
