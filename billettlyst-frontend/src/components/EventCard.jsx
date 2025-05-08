@@ -3,7 +3,7 @@ import './EventCard.css'
 
 function EventCard({ event, clickable = true }) {
   const name = event.name
-  const image = event.images?.[0]?.url
+  const image = event.images?.[0]?.url || 'https://via.placeholder.com/300x180?text=No+Image'
   const date = event.dates?.start?.localDate
   const city = event._embedded?.venues?.[0]?.city?.name
   const country = event._embedded?.venues?.[0]?.country?.name

@@ -1,52 +1,108 @@
 .category-page {
     padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: white;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
   }
   
   .filters {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+    justify-content: center;
   }
   
-  .filters input {
+  .filters input[type="text"],
+  .filters input[type="date"],
+  .filters select {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    min-width: 180px;
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .filters button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .date-input {
     padding: 0.5rem;
     font-size: 1rem;
-    flex: 1 1 150px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    appearance: auto;
+    cursor: pointer;
+    background-color: #fff;
+    color: #000;
+  }
+  
+  
+  .filters button:hover {
+    background-color: #0056b3;
   }
   
   .card-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    justify-content: center;
   }
   
   .card {
-    background: #f4f4f4;
-    padding: 1rem;
+    background-color: #1e1e1e;
+    color: white;
     border-radius: 8px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 250px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
   }
   
   .card img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 6px;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+  }
+  
+  .card h3 {
+    font-size: 1.1rem;
+    margin: 0.3rem 0;
+    text-align: center;
   }
   
   .card p {
-    margin: 0.5rem 0;
-    font-weight: bold;
-    color: #000;
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+    text-align: center;
   }
   
   .card button {
-    background: none;
+    background: transparent;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+    margin-top: 0.5rem;
+    color: white;
   }
   
