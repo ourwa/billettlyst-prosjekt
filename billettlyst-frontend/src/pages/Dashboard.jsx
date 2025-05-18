@@ -129,8 +129,11 @@ function Dashboard() {
                 {shared?.length > 0 &&
                   shared.map((event) => (
                     <p key={event._id}>
-                      Du og {friend.name} ønsker begge å dra på <strong>{event.title}</strong>
-                    </p>
+  Du og {friend.name} ønsker begge å dra på <strong>
+    <Link to={`/event/${event.apiId}`}>{event.title}</Link>
+  </strong>
+</p>
+
                   ))}
               </div>
             )

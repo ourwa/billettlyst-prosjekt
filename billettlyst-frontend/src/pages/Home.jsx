@@ -6,12 +6,13 @@ const API_KEY = 'nWMG0qUTjpgAf9AvHEWupFaZr6t3lGJp'
 const proxy = 'https://api.allorigins.win/raw?url='
 
 const festivals = ['Findings', 'Neon', 'Skeikampenfestivalen', 'Tons of Rock']
-const cities = ['Oslo', 'Berlin', 'London', 'Paris','Stockholm']
+const cities = ['Oslo', 'Berlin', 'London', 'Paris', 'Stockholm']
 
 function Home() {
   const [events, setEvents] = useState([])
   const [cityEvents, setCityEvents] = useState([])
-  const [selectedCity, setSelectedCity] = useState('')
+  const [selectedCity, setSelectedCity] = useState('Oslo') 
+
 
   useEffect(() => {
     async function fetchFestivals() {
@@ -30,11 +31,14 @@ function Home() {
           }
         })
       )
-      setEvents(fetched.flat())
+
+      const limited = fetched.flat().slice(0, 4) 
+      setEvents(limited)
     }
 
     fetchFestivals()
   }, [])
+
 
   const fetchCityEvents = async (city) => {
     setSelectedCity(city)
@@ -51,6 +55,11 @@ function Home() {
       setCityEvents([])
     }
   }
+
+
+  useEffect(() => {
+    fetchCityEvents('Oslo')
+  }, [])
 
   return (
     <div className="home">
