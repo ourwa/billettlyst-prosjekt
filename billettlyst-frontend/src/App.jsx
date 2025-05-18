@@ -15,7 +15,8 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/event/:id" element={<EventPage />} />
+        <Route path="/event/:apiId" element={<EventPage />} />
+
         <Route path="/category/:slug" element={<CategoryPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/sanity-event/:id" element={<SanityEventDetails />} />

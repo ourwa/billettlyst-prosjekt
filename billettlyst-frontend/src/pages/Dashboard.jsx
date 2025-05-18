@@ -1,3 +1,5 @@
+// Dashboard.jsx
+
 import { useEffect, useState } from 'react'
 import client from '../sanityClient'
 import { Link } from 'react-router-dom'
@@ -26,13 +28,13 @@ function Dashboard() {
         gender,
         age,
         image{asset->{url}},
-        wishlist[]->{_id, title},
-        previousPurchases[]->{_id, title},
+        wishlist[]->{_id, title, apiId},
+        previousPurchases[]->{_id, title, apiId},
         friends[]->{
           _id,
           name,
           image{asset->{url}},
-          wishlist[]->{_id, title}
+          wishlist[]->{_id, title, apiId}
         }
       }`,
       { name, email }
@@ -95,7 +97,7 @@ function Dashboard() {
           {currentUser.wishlist?.map((e) => (
             <div key={e._id}>
               <p>{e.title}</p>
-              <Link to={`/sanity-event/${e._id}`}>Se mer om dette kjøpet</Link>
+              <Link to={`/event/${e.apiId}`}>Se mer om dette kjøpet</Link>
             </div>
           ))}
         </div>
@@ -104,7 +106,7 @@ function Dashboard() {
           {currentUser.previousPurchases?.map((e) => (
             <div key={e._id}>
               <p>{e.title}</p>
-              <Link to={`/sanity-event/${e._id}`}>Se mer om dette kjøpet</Link>
+              <Link to={`/event/${e.apiId}`}>Se mer om dette kjøpet</Link>
             </div>
           ))}
         </div>
@@ -112,7 +114,7 @@ function Dashboard() {
           <h3>Venner</h3>
           {currentUser.friends?.map((friend) => {
             const shared = currentUser.wishlist?.filter((w) =>
-              friend.wishlist?.some((f) => f._id === w._id)
+              friend.wishlist?.some((f) => f.apiId === w.apiId)
             )
             return (
               <div key={friend._id}>
@@ -127,7 +129,7 @@ function Dashboard() {
                 {shared?.length > 0 &&
                   shared.map((event) => (
                     <p key={event._id}>
-                      Du og {friend.name} ønsker begge å dra på <strong>{event.title}</strong>, hva med å dra sammen?
+                      Du og {friend.name} ønsker begge å dra på <strong>{event.title}</strong>
                     </p>
                   ))}
               </div>
