@@ -14,8 +14,8 @@ const segmentMap = {
 
 const cityMap = {
   NO: ['Oslo', 'Bergen', 'Trondheim'],
-  SE: ['Stockholm', 'Gothenburg', 'Malmö'],
-  DK: ['Copenhagen', 'Aarhus', 'Odense']
+  SE: ['Stockholm', 'Skellefteå', 'Linköping'],
+  DK: ['København V', 'Aarhus C', 'Odense C']
 }
 
 function CategoryPage() {
@@ -89,7 +89,7 @@ function CategoryPage() {
 
   return (
     <div className="category-page">
-      <h1>Kategori: {slug}</h1>
+      <h1>{slug}</h1>
 
       <div className="filters">
         <label>

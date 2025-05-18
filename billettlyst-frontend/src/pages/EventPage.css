@@ -39,4 +39,24 @@
   .ticket-link:hover {
     background-color: #444;
   }
-  
+  .wishlist-users {
+  margin-top: 2rem;
+}
+
+.user-list {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.wishlist-user {
+  text-align: center;
+  max-width: 100px;
+}
+
+.wishlist-user img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}

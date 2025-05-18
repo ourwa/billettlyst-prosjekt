@@ -1,22 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
 import Home from './pages/Home'
 import EventPage from './pages/EventPage'
 import CategoryPage from './pages/CategoryPage'
 import Dashboard from './pages/Dashboard'
-import Navbar from './components/Header'
 import SanityEventDetails from './pages/SanityEventDetails'
+import Header from './components/Header'
 import Layout from './components/Layout'
+
+
 function App() {
   return (
     <Router>
-      <Navbar />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/event/:id" element={<EventPage />} />
         <Route path="/category/:slug" element={<CategoryPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/sanity-event/:id" element={<SanityEventDetails />} />
-        <Route path="/" element={<Layout />}></Route>
+        <Route path="*" element={<Layout />} />
       </Routes>
     </Router>
   )

@@ -31,6 +31,7 @@ function Dashboard() {
         friends[]->{
           _id,
           name,
+          image{asset->{url}},
           wishlist[]->{_id, title}
         }
       }`,
@@ -50,83 +51,90 @@ function Dashboard() {
     localStorage.removeItem('currentUser')
   }
 
+  if (!currentUser) {
+    return (
+      <form className="login-form" onSubmit={handleLogin}>
+        <h2>Logg inn</h2>
+        <input
+          type="text"
+          placeholder="Navn"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="E-post"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button type="submit">Logg inn</button>
+      </form>
+    )
+  }
+
   return (
-    <div className="dashboard">
-      {!currentUser ? (
-        <form className="login-form" onSubmit={handleLogin}>
-          <h2>Logg inn</h2>
-          <input
-            type="text"
-            placeholder="Navn"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+    <div className="dashboard-layout">
+      <div className="user-info">
+        <h2>{currentUser.name}</h2>
+        {currentUser.image?.asset?.url && (
+          <img
+            src={currentUser.image.asset.url}
+            alt="Profilbilde"
+            className="user-image"
           />
-          <input
-            type="email"
-            placeholder="E-post"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button type="submit">Logg inn</button>
-        </form>
-      ) : (
-        <div className="min-side">
-          <h2>Min side</h2>
-          <p>Velkommen, {currentUser.name}!</p>
-          <p>E-post: {currentUser.email}</p>
+        )}
+        <p>{currentUser.gender}</p>
+        <p>{currentUser.age}</p>
+        <p>{currentUser.email}</p>
+        <button onClick={handleLogout}>Logg ut</button>
+      </div>
 
-          {currentUser.image?.asset?.url && (
-            <img
-              src={currentUser.image.asset.url}
-              alt="Profilbilde"
-              style={{ width: '120px', borderRadius: '50%', marginBottom: '1rem' }}
-            />
-          )}
-
-          <button onClick={handleLogout}>Logg ut</button>
-
-          <p>🎟 Tidligere kjøp: {currentUser.previousPurchases?.length || 0}</p>
-          <ul>
-            {currentUser.previousPurchases?.map((e) => (
-              <li key={e._id}>
-                <Link to={`/sanity-event/${e._id}`}>✔️ {e.title}</Link>
-              </li>
-            ))}
-          </ul>
-
-          <p>💖 Ønskeliste: {currentUser.wishlist?.length || 0}</p>
-          <ul>
-            {currentUser.wishlist?.map((e) => (
-              <li key={e._id}>
-                <Link to={`/sanity-event/${e._id}`}>🌟 {e.title}</Link>
-              </li>
-            ))}
-          </ul>
-
-          {currentUser.friends && currentUser.friends.length > 0 && (
-            <div className="friends-section">
-              <h3>Venner:</h3>
-              {currentUser.friends.map((friend) => {
-                const shared = currentUser.wishlist?.filter((e) =>
-                  friend.wishlist?.some((f) => f._id === e._id)
-                )
-
-                return (
-                  <div key={friend._id} style={{ marginBottom: '1rem' }}>
-                    <p><strong>{friend.name}</strong></p>
-                    {shared?.length > 0 &&
-                      shared.map((e) => (
-                        <p key={e._id}>
-                          Du og {friend.name} har samme event i ønskelisten – hva med å dra sammen på <em>{e.title}</em>?
-                        </p>
-                      ))}
-                  </div>
-                )
-              })}
+      <div className="user-content">
+        <div>
+          <h3>Min ønskeliste</h3>
+          {currentUser.wishlist?.map((e) => (
+            <div key={e._id}>
+              <p>{e.title}</p>
+              <Link to={`/sanity-event/${e._id}`}>Se mer om dette kjøpet</Link>
             </div>
-          )}
+          ))}
         </div>
-      )}
+        <div>
+          <h3>Min kjøp</h3>
+          {currentUser.previousPurchases?.map((e) => (
+            <div key={e._id}>
+              <p>{e.title}</p>
+              <Link to={`/sanity-event/${e._id}`}>Se mer om dette kjøpet</Link>
+            </div>
+          ))}
+        </div>
+        <div>
+          <h3>Venner</h3>
+          {currentUser.friends?.map((friend) => {
+            const shared = currentUser.wishlist?.filter((w) =>
+              friend.wishlist?.some((f) => f._id === w._id)
+            )
+            return (
+              <div key={friend._id}>
+                {friend.image?.asset?.url && (
+                  <img
+                    src={friend.image.asset.url}
+                    alt={friend.name}
+                    className="friend-image"
+                  />
+                )}
+                <p><strong>{friend.name}</strong></p>
+                {shared?.length > 0 &&
+                  shared.map((event) => (
+                    <p key={event._id}>
+                      Du og {friend.name} ønsker begge å dra på <strong>{event.title}</strong>, hva med å dra sammen?
+                    </p>
+                  ))}
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }
