@@ -1,3 +1,5 @@
+/*stil for kategori visning (CategoryPage) */
+
 .category-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -10,14 +12,14 @@
   margin-bottom: 1rem;
 }
 
-.filters,
-.search-bar {
+.filters {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  align-items: flex-end; 
   margin-bottom: 1.5rem;
-  align-items: center;
 }
+
 
 .filters label,
 .search-bar label {
@@ -82,12 +84,11 @@ button:hover {
 .card h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
-  white-space: normal;       
-  overflow: visible;           
-  word-break: break-word;      
-  color: #111;                 
+  white-space: normal;
+  overflow: visible;
+  word-break: break-word;
+  color: #111;
 }
-
 
 .card p {
   font-size: 0.9rem;

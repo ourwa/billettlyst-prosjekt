@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-
+import KeywordSearchPage from './pages/KeywordSearchPage'
 import Home from './pages/Home'
 import EventPage from './pages/EventPage'
 import CategoryPage from './pages/CategoryPage'
@@ -27,6 +27,10 @@ function App() {
           <Route path="category/:slug" element={<CategoryPage />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="sanity-event/:id" element={<SanityEventDetails />} />
+          <Route path="/keyword/:keyword" element={<KeywordSearchPage />} />
+
+
+
         </Route>
       </Routes>
     </Router>

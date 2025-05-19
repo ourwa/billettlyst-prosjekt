@@ -9,13 +9,13 @@ function Header({ currentUser }) {
       <nav> {/*navigasjonsmeny */}
         <Link to="/category/musikk">Musikk</Link> {/*lenke til musikk-kategori */}
         <Link to="/category/sport">Sport</Link>   {/*lenke til sport-kategori */}
-        <Link to="/category/teater">Teater</Link> {/*lenke til teater-kategori */}
+        <Link to="/category/teater">Teater/show</Link> {/*lenke til teater-kategori */}
 
         {/*viser "Min side" hvis brukeren er innlogget, ellers "Login" */}
         {currentUser ? (
           <Link to="/dashboard">Min side</Link>
         ) : (
-          <Link to="/dashboard">Login</Link>
+          <Link to="/dashboard">Min side</Link>
         )}
       </nav>
     </header>

@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import './CategoryPage.css'
 
-//API-nøkkelen for Ticketmaster
+//API nøkkelen for Ticketmaster
 const API_KEY = 'nWMG0qUTjpgAf9AvHEWupFaZr6t3lGJp'
 
-//map mellom URL-slug og Ticketmaster segmentnavn
+//map mellom URLslug og Ticketmaster segmentnavn
 const segmentMap = {
   musikk: 'Music',
   sport: 'Sports',
@@ -14,7 +14,7 @@ const segmentMap = {
   festival: 'Music'
 }
 
-//forhåndsdefinerte byer per land brukt i by-filteret
+//forhåndsdefinerte byer per land brukt i by filteret
 const cityMap = {
   NO: ['Oslo', 'Bergen', 'Trondheim'],
   SE: ['Stockholm', 'Skellefteå', 'Linköping'],
@@ -22,7 +22,7 @@ const cityMap = {
 }
 
 function CategoryPage() {
-  const { slug } = useParams() //henter kategorien fra URL
+  const { slug } = useParams() // henter kategorien fra URL
   const [events, setEvents] = useState([])
   const [attractions, setAttractions] = useState([])
   const [venues, setVenues] = useState([])
@@ -31,8 +31,9 @@ function CategoryPage() {
   const [filterDate, setFilterDate] = useState('')
   const [filterCountry, setFilterCountry] = useState('')
   const [filterCity, setFilterCity] = useState('')
+  const [shouldFilter, setShouldFilter] = useState(false) //flagg for å kontrollere når filtrering skal skje
 
-  //henter arrangementer, attraksjoner og spillesteder fra API-et
+  //henter arrangementer, attraksjoner og spillesteder fra API
   const fetchAllData = async () => {
     const segment = segmentMap[slug?.toLowerCase()] || ''
     const dateFrom = filterDate && `${filterDate}T00:00:00Z`
@@ -50,7 +51,7 @@ function CategoryPage() {
     ].filter(Boolean).join('&')
 
     try {
-      //henter arrangementer
+      // henter arrangementer
       const eventsRes = await fetch(`/api/discovery/v2/events.json?${params}`)
       const eventsData = await eventsRes.json()
       setEvents(eventsData._embedded?.events || [])
@@ -70,11 +71,18 @@ function CategoryPage() {
     }
   }
 
-  //kjør fetch når slug eller filtre endres
+  //kjør fetch når slug endres
   useEffect(() => {
-    console.log('Henter data for kategori:', slug)
     fetchAllData()
-  }, [slug, filterDate, filterCountry, filterCity])
+  }, [slug])
+
+  //kjør fetch når bruker trykker på Filtrer
+  useEffect(() => {
+    if (shouldFilter) {
+      fetchAllData()
+      setShouldFilter(false)
+    }
+  }, [shouldFilter])
 
   //legg til/fjern element fra ønskelisten
   const toggleWishlist = (itemId) => {
@@ -83,7 +91,7 @@ function CategoryPage() {
     )
   }
 
-  //sjekk om et item er i ønskelisten
+  // sjekk om et item er i ønskelisten
   const isInWishlist = (itemId) => wishlist.includes(itemId)
 
   //funksjon for å vise cards (eventer, attraksjoner, spillesteder)
@@ -116,7 +124,7 @@ function CategoryPage() {
             </p>
           )}
 
-          {/*qnskeliste-ikon */}
+          {/*ønskeliste-ikon */}
           <button onClick={() => toggleWishlist(item.id)}>
             {isInWishlist(item.id) ? '❤️' : '🤍'}
           </button>
@@ -143,8 +151,7 @@ function CategoryPage() {
           <select
             value={filterCountry}
             onChange={(e) => {
-              const country = e.target.value
-              setFilterCountry(country)
+              setFilterCountry(e.target.value)
               setFilterCity('')
             }}
           >
@@ -170,19 +177,24 @@ function CategoryPage() {
           </select>
         </label>
 
-        <button onClick={fetchAllData}>Filtrer</button>
+        <div style={{ marginTop: '1.5rem' }}>
+          <button onClick={() => setShouldFilter(true)}>Filtrer</button>
+        </div>
       </div>
 
       {/*søkeseksjon */}
       <div className="search-bar">
         <label>
           Søk etter event, attraksjon eller spillested
-          <input
-            type="text"
-            placeholder="Søk..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <input
+              type="text"
+              placeholder="Søk..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button onClick={fetchAllData}>Søk</button>
+          </div>
         </label>
       </div>
 
@@ -192,7 +204,7 @@ function CategoryPage() {
         <div className="card-list">{renderCards(events, 'event')}</div>
       </section>
 
-      {/*seksjon for attraksjoner */}
+      {/*seksjon for attraksjoner*/}
       <section>
         <h2>Attraksjoner</h2>
         <div className="card-list">{renderCards(attractions, 'attraction')}</div>
