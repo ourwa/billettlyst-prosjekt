@@ -46,17 +46,14 @@ function CategoryPage() {
     ].filter(Boolean).join('&')
 
     try {
-      // Events
       const eventsRes = await fetch(`/api/discovery/v2/events.json?${params}`)
       const eventsData = await eventsRes.json()
       setEvents(eventsData._embedded?.events || [])
 
-      // Attractions
       const suggestRes = await fetch(`/api/discovery/v2/suggest.json?apikey=${API_KEY}&keyword=${slug}`)
       const suggestData = await suggestRes.json()
       setAttractions(suggestData._embedded?.attractions || [])
 
-      // Venues
       const venueRes = await fetch(`/api/discovery/v2/venues.json?apikey=${API_KEY}&countryCode=${filterCountry || 'NO'}&size=10`)
       const venueData = await venueRes.json()
       setVenues(venueData._embedded?.venues || [])
@@ -67,8 +64,9 @@ function CategoryPage() {
   }
 
   useEffect(() => {
+    console.log('Henter data for kategori:', slug)
     fetchAllData()
-  }, [slug])
+  }, [slug, filterDate, filterCountry, filterCity])
 
   const toggleWishlist = (itemId) => {
     setWishlist((prev) =>
