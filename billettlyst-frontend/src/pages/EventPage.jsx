@@ -24,7 +24,7 @@ function EventPage() {
         const eventData = await res.json()
         setTicketmasterData(eventData)
 
-        // 2. Hent brukere من Sanity som لديهم هذا الحدث في ønskeliste
+       
         const users = await client.fetch(
           `*[_type == "bruker" && $apiId in wishlist[]->apiId]{
             name,
@@ -35,7 +35,7 @@ function EventPage() {
         )
         setWishlistUsers(users)
 
-        // 3. Hent المستخدم الحالي من localStorage
+      
         const stored = localStorage.getItem('currentUser')
         if (stored) {
           setCurrentUser(JSON.parse(stored))
@@ -61,6 +61,7 @@ function EventPage() {
   const date = dates?.start?.localDate
   const time = dates?.start?.localTime
   const artists = _embedded?.attractions?.map((a) => a.name)
+  
 
   const isInWishlist = currentUser?.wishlist?.some(e => e.apiId === apiId)
   const isInPurchases = currentUser?.previousPurchases?.some(e => e.apiId === apiId)
@@ -83,7 +84,22 @@ function EventPage() {
         <li><strong>Sjanger:</strong> {genre} {subGenre && `– ${subGenre}`}</li>
         {artists?.length > 0 && <li><strong>Artister:</strong> {artists.join(', ')}</li>}
         {info && <li><strong>Info:</strong> {info}</li>}
-      </ul>
+        </ul>
+        {Array.isArray(ticketmasterData?.priceRanges) && ticketmasterData.priceRanges.length > 0 && (
+  <div className="festivalpass" style={{ marginTop: '1.5rem' }}>
+    <h2>Festivalpass</h2>
+    <ul>
+      {ticketmasterData.priceRanges.map((p, index) => (
+        <li key={index}>
+          <strong>{p.type || 'Billett'}:</strong>{' '}
+          {p.min} – {p.max} {p.currency}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+      
 
       {url && (
         <a

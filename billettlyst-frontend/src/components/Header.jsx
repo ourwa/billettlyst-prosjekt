@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import './Header.css'
 
-function Header() {
+function Header({ currentUser }) {
   return (
     <header className="main-header">
       <Link to="/" className="logo">Billettlyst</Link>
@@ -9,7 +9,11 @@ function Header() {
         <Link to="/category/musikk">Musikk</Link>
         <Link to="/category/sport">Sport</Link>
         <Link to="/category/teater">Teater</Link>
-        <Link to="/dashboard">Login</Link>
+        {currentUser ? (
+          <Link to="/dashboard">Min side</Link>
+        ) : (
+          <Link to="/dashboard">Login</Link>
+        )}
       </nav>
     </header>
   )

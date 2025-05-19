@@ -21,13 +21,15 @@ const cityMap = {
 function CategoryPage() {
   const { slug } = useParams()
   const [events, setEvents] = useState([])
+  const [attractions, setAttractions] = useState([])
+  const [venues, setVenues] = useState([])
   const [wishlist, setWishlist] = useState([])
   const [search, setSearch] = useState('')
   const [filterDate, setFilterDate] = useState('')
   const [filterCountry, setFilterCountry] = useState('')
   const [filterCity, setFilterCity] = useState('')
 
-  const fetchFilteredEvents = async () => {
+  const fetchAllData = async () => {
     const segment = segmentMap[slug?.toLowerCase()] || ''
     const dateFrom = filterDate && `${filterDate}T00:00:00Z`
     const dateTo = filterDate && `${filterDate}T23:59:59Z`
@@ -43,19 +45,29 @@ function CategoryPage() {
       'sort=date,asc'
     ].filter(Boolean).join('&')
 
-    const url = `/api/discovery/v2/events.json?${params}`
-
     try {
-      const res = await fetch(url)
-      const data = await res.json()
-      setEvents(data._embedded?.events || [])
+      // Events
+      const eventsRes = await fetch(`/api/discovery/v2/events.json?${params}`)
+      const eventsData = await eventsRes.json()
+      setEvents(eventsData._embedded?.events || [])
+
+      // Attractions
+      const suggestRes = await fetch(`/api/discovery/v2/suggest.json?apikey=${API_KEY}&keyword=${slug}`)
+      const suggestData = await suggestRes.json()
+      setAttractions(suggestData._embedded?.attractions || [])
+
+      // Venues
+      const venueRes = await fetch(`/api/discovery/v2/venues.json?apikey=${API_KEY}&countryCode=${filterCountry || 'NO'}&size=10`)
+      const venueData = await venueRes.json()
+      setVenues(venueData._embedded?.venues || [])
+
     } catch (error) {
-      console.error('Error fetching filtered events:', error)
+      console.error('Feil ved henting av data:', error)
     }
   }
 
   useEffect(() => {
-    fetchFilteredEvents()
+    fetchAllData()
   }, [slug])
 
   const toggleWishlist = (itemId) => {
@@ -66,7 +78,7 @@ function CategoryPage() {
 
   const isInWishlist = (itemId) => wishlist.includes(itemId)
 
-  const renderCards = (items) =>
+  const renderCards = (items, type) =>
     items
       .filter((item) => item.name?.toLowerCase().includes(search.toLowerCase()))
       .map((item) => (
@@ -76,11 +88,20 @@ function CategoryPage() {
             alt={item.name}
           />
           <h3>{item.name}</h3>
-          <p>{item.dates?.start?.localDate}</p>
-          <p>
-            {item._embedded?.venues?.[0]?.city?.name},{' '}
-            {item._embedded?.venues?.[0]?.country?.name}
-          </p>
+          {type === 'event' && (
+            <>
+              <p>{item.dates?.start?.localDate}</p>
+              <p>
+                {item._embedded?.venues?.[0]?.city?.name},{' '}
+                {item._embedded?.venues?.[0]?.country?.name}
+              </p>
+            </>
+          )}
+          {type === 'venue' && (
+            <p>
+              {item.city?.name}, {item.country?.name}
+            </p>
+          )}
           <button onClick={() => toggleWishlist(item.id)}>
             {isInWishlist(item.id) ? '❤️' : '🤍'}
           </button>
@@ -133,7 +154,7 @@ function CategoryPage() {
           </select>
         </label>
 
-        <button onClick={fetchFilteredEvents}>Filtrer</button>
+        <button onClick={fetchAllData}>Filtrer</button>
       </div>
 
       <div className="search-bar">
@@ -141,21 +162,26 @@ function CategoryPage() {
           Søk etter event, attraksjon eller spillested
           <input
             type="text"
-            placeholder="Søk Event"
+            placeholder="Søk..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </label>
-       
       </div>
 
       <section>
-        <h2>Resultater</h2>
-        {events.length === 0 ? (
-          <p>Ingen resultater funnet. Prøv andre filtre eller dato.</p>
-        ) : (
-          <div className="card-list">{renderCards(events)}</div>
-        )}
+        <h2>Arrangementer</h2>
+        <div className="card-list">{renderCards(events, 'event')}</div>
+      </section>
+
+      <section>
+        <h2>Attraksjoner</h2>
+        <div className="card-list">{renderCards(attractions, 'attraction')}</div>
+      </section>
+
+      <section>
+        <h2>Spillesteder</h2>
+        <div className="card-list">{renderCards(venues, 'venue')}</div>
       </section>
     </div>
   )

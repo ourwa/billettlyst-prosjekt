@@ -155,3 +155,39 @@
   border-radius: 6px;
   cursor: pointer;
 }
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .user-content {
+    flex-direction: column;
+  }
+
+  .user-info,
+  .user-content > div {
+    max-width: 100%;
+  }
+
+  .user-image,
+  .user-info img {
+    width: 100%;
+    max-width: 150px;
+    margin: 0 auto 1rem;
+  }
+
+  .login-form input {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .login-form button {
+    width: 100%;
+  }
+}
+.min-side {
+  text-align: center;
+  font-size: 2rem;
+  margin: 2rem 0 1rem 0; 
+  color: white;
+}
