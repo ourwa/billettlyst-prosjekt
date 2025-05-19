@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import client from '../sanityClient'
 import { Link } from 'react-router-dom'
-import './Dashboard.css'
+import './Dashboard.css' //importerer CSS-stil for dashboardet
 
 function Dashboard() {
+  //tilstand for innlogging
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
@@ -12,6 +13,7 @@ function Dashboard() {
   const API_KEY = 'nWMG0qUTjpgAf9AvHEWupFaZr6t3lGJp'
   const proxyUrl = 'https://api.allorigins.win/raw?url='
 
+  //henter brukerdata fra localStorage
   useEffect(() => {
     const stored = localStorage.getItem('currentUser')
     if (stored) {
@@ -19,6 +21,7 @@ function Dashboard() {
     }
   }, [])
 
+  //henter eventdetaljer fra Ticketmaster API basert på brukerens ønskeliste og kjøp
   useEffect(() => {
     if (!currentUser) return
 
@@ -54,6 +57,7 @@ function Dashboard() {
     fetchAllEvents()
   }, [currentUser])
 
+  //håndterer innlogging ved å hente brukerdata fra Sanity
   const handleLogin = async (e) => {
     e.preventDefault()
     const user = await client.fetch(
@@ -84,11 +88,13 @@ function Dashboard() {
     }
   }
 
+  //logg ut bruker og fjern fra localStorage
   const handleLogout = () => {
     setCurrentUser(null)
     localStorage.removeItem('currentUser')
   }
 
+  //viser innloggingsskjema hvis bruker ikke er logget inn
   if (!currentUser) {
     return (
       <form className="login-form" onSubmit={handleLogin}>
@@ -112,9 +118,10 @@ function Dashboard() {
 
   return (
     <>
-      <h1 className="min-side">Min side</h1>
+      <h1 className="min-side">Min side</h1> {/*overskrift for brukerens dashbord */}
 
       <div className="dashboard-layout">
+        {/*seksjon: brukerinformasjon */}
         <div className="user-info">
           <h2>{currentUser.name}</h2>
           {currentUser.image?.asset?.url && (
@@ -132,6 +139,7 @@ function Dashboard() {
           <button onClick={handleLogout}>Logg ut</button>
         </div>
 
+        {/*seksjon:ønskeliste */}
         <div className="user-content">
           <div>
             <h3>Min ønskeliste</h3>
@@ -150,6 +158,7 @@ function Dashboard() {
             })}
           </div>
 
+          {/*seksjon:tidligere kjøp */}
           <div>
             <h3>Min kjøp</h3>
             {currentUser.previousPurchases?.map((e) => {
@@ -167,6 +176,7 @@ function Dashboard() {
             })}
           </div>
 
+          {/*seksjon:venner og felles arrangementer */}
           <div>
             <h3>Venner</h3>
             {currentUser.friends?.map((friend) => {

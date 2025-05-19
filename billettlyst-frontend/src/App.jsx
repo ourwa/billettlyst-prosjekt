@@ -6,7 +6,6 @@ import EventPage from './pages/EventPage'
 import CategoryPage from './pages/CategoryPage'
 import Dashboard from './pages/Dashboard'
 import SanityEventDetails from './pages/SanityEventDetails'
-import Header from './components/Header'
 import Layout from './components/Layout'
 
 function App() {
@@ -21,14 +20,14 @@ function App() {
 
   return (
     <Router>
-      <Header currentUser={currentUser} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/event/:apiId" element={<EventPage />} />
-        <Route path="/category/:slug" element={<CategoryPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/sanity-event/:id" element={<SanityEventDetails />} />
-        <Route path="*" element={<Layout />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="event/:apiId" element={<EventPage />} />
+          <Route path="category/:slug" element={<CategoryPage />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="sanity-event/:id" element={<SanityEventDetails />} />
+        </Route>
       </Routes>
     </Router>
   )

@@ -82,7 +82,12 @@ button:hover {
 .card h3 {
   font-size: 1rem;
   margin-bottom: 0.3rem;
+  white-space: normal;       
+  overflow: visible;           
+  word-break: break-word;      
+  color: #111;                 
 }
+
 
 .card p {
   font-size: 0.9rem;

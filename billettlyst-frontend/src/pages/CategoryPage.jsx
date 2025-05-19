@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import './CategoryPage.css'
 
+//API-nøkkelen for Ticketmaster
 const API_KEY = 'nWMG0qUTjpgAf9AvHEWupFaZr6t3lGJp'
 
+//map mellom URL-slug og Ticketmaster segmentnavn
 const segmentMap = {
   musikk: 'Music',
   sport: 'Sports',
@@ -12,6 +14,7 @@ const segmentMap = {
   festival: 'Music'
 }
 
+//forhåndsdefinerte byer per land brukt i by-filteret
 const cityMap = {
   NO: ['Oslo', 'Bergen', 'Trondheim'],
   SE: ['Stockholm', 'Skellefteå', 'Linköping'],
@@ -19,7 +22,7 @@ const cityMap = {
 }
 
 function CategoryPage() {
-  const { slug } = useParams()
+  const { slug } = useParams() //henter kategorien fra URL
   const [events, setEvents] = useState([])
   const [attractions, setAttractions] = useState([])
   const [venues, setVenues] = useState([])
@@ -29,6 +32,7 @@ function CategoryPage() {
   const [filterCountry, setFilterCountry] = useState('')
   const [filterCity, setFilterCity] = useState('')
 
+  //henter arrangementer, attraksjoner og spillesteder fra API-et
   const fetchAllData = async () => {
     const segment = segmentMap[slug?.toLowerCase()] || ''
     const dateFrom = filterDate && `${filterDate}T00:00:00Z`
@@ -46,14 +50,17 @@ function CategoryPage() {
     ].filter(Boolean).join('&')
 
     try {
+      //henter arrangementer
       const eventsRes = await fetch(`/api/discovery/v2/events.json?${params}`)
       const eventsData = await eventsRes.json()
       setEvents(eventsData._embedded?.events || [])
 
+      //henter attraksjoner via suggest-endepunktet
       const suggestRes = await fetch(`/api/discovery/v2/suggest.json?apikey=${API_KEY}&keyword=${slug}`)
       const suggestData = await suggestRes.json()
       setAttractions(suggestData._embedded?.attractions || [])
 
+      //henter spillesteder
       const venueRes = await fetch(`/api/discovery/v2/venues.json?apikey=${API_KEY}&countryCode=${filterCountry || 'NO'}&size=10`)
       const venueData = await venueRes.json()
       setVenues(venueData._embedded?.venues || [])
@@ -63,19 +70,23 @@ function CategoryPage() {
     }
   }
 
+  //kjør fetch når slug eller filtre endres
   useEffect(() => {
     console.log('Henter data for kategori:', slug)
     fetchAllData()
   }, [slug, filterDate, filterCountry, filterCity])
 
+  //legg til/fjern element fra ønskelisten
   const toggleWishlist = (itemId) => {
     setWishlist((prev) =>
       prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
     )
   }
 
+  //sjekk om et item er i ønskelisten
   const isInWishlist = (itemId) => wishlist.includes(itemId)
 
+  //funksjon for å vise cards (eventer, attraksjoner, spillesteder)
   const renderCards = (items, type) =>
     items
       .filter((item) => item.name?.toLowerCase().includes(search.toLowerCase()))
@@ -85,7 +96,9 @@ function CategoryPage() {
             src={item.images?.[0]?.url || 'https://via.placeholder.com/300x180?text=No+Image'}
             alt={item.name}
           />
-          <h3>{item.name}</h3>
+          <h3 title={item.name}>{item.name}</h3>
+
+          {/*viser dato og sted for eventer */}
           {type === 'event' && (
             <>
               <p>{item.dates?.start?.localDate}</p>
@@ -95,11 +108,15 @@ function CategoryPage() {
               </p>
             </>
           )}
+
+          {/*viser sted for venues */}
           {type === 'venue' && (
             <p>
               {item.city?.name}, {item.country?.name}
             </p>
           )}
+
+          {/*qnskeliste-ikon */}
           <button onClick={() => toggleWishlist(item.id)}>
             {isInWishlist(item.id) ? '❤️' : '🤍'}
           </button>
@@ -110,6 +127,7 @@ function CategoryPage() {
     <div className="category-page">
       <h1>{slug}</h1>
 
+      {/*filterseksjonen */}
       <div className="filters">
         <label>
           Dato:
@@ -155,6 +173,7 @@ function CategoryPage() {
         <button onClick={fetchAllData}>Filtrer</button>
       </div>
 
+      {/*søkeseksjon */}
       <div className="search-bar">
         <label>
           Søk etter event, attraksjon eller spillested
@@ -167,16 +186,19 @@ function CategoryPage() {
         </label>
       </div>
 
+      {/*seksjon for arrangementer */}
       <section>
         <h2>Arrangementer</h2>
         <div className="card-list">{renderCards(events, 'event')}</div>
       </section>
 
+      {/*seksjon for attraksjoner */}
       <section>
         <h2>Attraksjoner</h2>
         <div className="card-list">{renderCards(attractions, 'attraction')}</div>
       </section>
 
+      {/*seksjon for spillesteder */}
       <section>
         <h2>Spillesteder</h2>
         <div className="card-list">{renderCards(venues, 'venue')}</div>

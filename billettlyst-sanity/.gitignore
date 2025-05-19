@@ -27,3 +27,6 @@
 
 # Dotenv and similar local-only files
 *.local
+
+# Add this to ignore your secret token
+.env

@@ -5,7 +5,7 @@ const client = createClient({
   dataset: 'production',
   apiVersion: '2023-01-01',
   useCdn: false,
-  token: 'sk4xXH5xq80u4rFv58NaXtT6JIaAZ2koRoiNTTMMEJo2aNUZPCwNsEcM0KTGrDXE7Raw5GVqMGBrNktsZhg3UvRFi216mzq2fDcIgaFD3HK1lXwZFRYcGMEHx7ZeHUYNzMnzADKUKGurn4WCWNEBG9k650GWexG7Iom9vbYk9DhdgtEEjPg9',
+  token: import.meta.env.VITE_SANITY_TOKEN, 
 })
 
 export default client
